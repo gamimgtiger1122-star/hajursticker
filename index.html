@@ -185,6 +185,17 @@
 
   /* Toast notification */
   #toast { transition: opacity .3s ease, transform .3s ease; }
+
+  /* ------------------------------------------------------------
+     HERO HEADING — big, bold, "sticker pop" text-shadow treatment
+     ------------------------------------------------------------ */
+  .hero-title {
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.35), 0 0 40px rgba(255,201,60,0.20);
+  }
+  .hero-pop {
+    transform: rotate(-2deg);
+    text-shadow: 3px 3px 0 #14213D, 6px 6px 0 rgba(0,0,0,0.35);
+  }
 </style>
 </head>
 
@@ -293,8 +304,8 @@
         <span class="inline-flex items-center gap-2 bg-accent/15 text-accent text-xs font-bold px-3 py-1 rounded-full mb-4">
           <i class="fa-solid fa-truck-fast"></i> Custom stickers, delivered across Nepal
         </span>
-        <h1 class="font-display font-bold text-4xl sm:text-5xl text-white leading-tight mb-4">
-          Stickers, Decals &<br class="hidden sm:block"> <span class="text-accent">Aesthetic Vibes.</span>
+        <h1 class="font-display font-bold text-5xl sm:text-6xl md:text-7xl text-white leading-[0.95] tracking-tight mb-5 hero-title">
+          Stickers, Decals &<br class="hidden sm:block"> <span class="text-accent hero-pop inline-block">Aesthetic Vibes.</span>
         </h1>
         <p class="text-bg/80 text-base sm:text-lg mb-8 max-w-md">
           Hajur Stickers brings you vinyl decals, holographic packs, and fully custom stickers — stuck-on style for your laptop, bottle, and journal, delivered fast.
