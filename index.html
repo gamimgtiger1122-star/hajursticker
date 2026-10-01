@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="google-site-verification" content="nNP4UrOdQ690peWcCNJM5OWHyVbfqyA9apGrlyFAcZo" />
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Hajur Stickers | Custom Stickers, Decals & Aesthetic Sticker Packs</title>
@@ -718,8 +717,8 @@
       <span>Total</span>
       <span id="cartTotal" class="price-tag big">Rs. 0</span>
     </div>
-    <button id="checkoutBtn" class="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-3 rounded-xl transition">
-      <i class="fa-brands fa-whatsapp mr-1"></i> Checkout via WhatsApp
+    <button id="checkoutBtn" class="w-full bg-gradient-to-r from-[#F58529] via-[#DD2A7B] to-[#8134AF] hover:opacity-90 text-white font-semibold py-3 rounded-xl transition">
+      <i class="fa-brands fa-instagram mr-1"></i> Checkout via Instagram
     </button>
   </div>
 </aside>
@@ -810,6 +809,7 @@
 const ADMIN_ID = "admin01";        // <-- change admin username here
 const ADMIN_PASSWORD = "-0000";    // <-- change admin password here
 const WHATSAPP_NUMBER = "9779807398988"; // country code + number, no + or spaces
+const INSTAGRAM_USERNAME = "hajurstickers0422"; // used for the checkout DM link
 
 // ---------------- SUPABASE (database backend) ----------------
 // Products are stored in Supabase, so every visitor (any device,
@@ -1207,16 +1207,40 @@ document.getElementById("cartBtn").addEventListener("click", openCart);
 document.getElementById("closeCartBtn").addEventListener("click", closeCart);
 document.getElementById("cartOverlay").addEventListener("click", closeCart);
 
-// Checkout via WhatsApp — compiles the cart into a readable order message
-document.getElementById("checkoutBtn").addEventListener("click", () => {
+// Checkout via Instagram — Instagram DM links can't carry a pre-filled
+// message the way WhatsApp's wa.me links can, so instead we copy the
+// order summary to the clipboard and open the Instagram DM, with a
+// toast telling the customer to paste it in.
+function copyToClipboard(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    return navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+  }
+  return fallbackCopy(text);
+}
+function fallbackCopy(text) {
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.style.position = "fixed";
+  ta.style.opacity = "0";
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try { document.execCommand("copy"); } catch (err) { /* ignore */ }
+  document.body.removeChild(ta);
+}
+
+document.getElementById("checkoutBtn").addEventListener("click", async () => {
   if (cart.length === 0) { showToast("Your cart is empty"); return; }
-  let msg = "Hello Hajur Stickers! I would like to order:%0A";
+  let msg = "Hello Hajur Stickers! I would like to order:\n";
   cart.forEach(item => {
-    msg += `- ${item.name} (x${item.qty}) — Rs. ${item.price * item.qty}%0A`;
+    msg += `- ${item.name} (x${item.qty}) — Rs. ${item.price * item.qty}\n`;
   });
   const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  msg += `%0ATotal: Rs. ${total}`;
-  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
+  msg += `\nTotal: Rs. ${total}`;
+
+  await copyToClipboard(msg);
+  showToast("Order copied! Paste it in the Instagram chat that just opened.");
+  window.open(`https://ig.me/m/${INSTAGRAM_USERNAME}`, "_blank");
 });
 
 // ---------------- TOAST ----------------
